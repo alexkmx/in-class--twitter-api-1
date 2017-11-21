@@ -14,6 +14,42 @@ function getAllUsers(req, res) {
     .then(data => res.json(data));
 }
 
+function getUserById(req, res) {
+  Users
+  .query()
+  .findById(req.params.id)
+  .then(Users => {
+    res.json(Users).status(200);
+  })
+  .catch(error => {
+    res.send(error).status(500);
+  });
+}
+
+function createUser (req, res) {
+  Users
+  .query()
+  .insert(req.body)
+  .then(newUser => {
+    return json (newUser).status(200);
+  })
+  .catch(error => {
+    return res.send(error).status(500);
+  });
+}
+
+function updateUser(req, res) {
+  Users
+  .query()
+  .updateAndFetchById(req.params.id, req.body)
+  .then(userUpdated => {
+    return res.json(userUpdated).status(200);
+  })
+  .catch(error => {
+    return res.send(error).status(500);
+  })
+}
+
 function deleteUserAndRelatedTweetsById (req, res) {
   // Get User to delete from DB.
   Users
@@ -113,6 +149,9 @@ function deleteTweetById(req, res) {
 //User Endpoints
 apiRouter
   .get('/users', getAllUsers)
+  .get('/users/:id', getUserById)
+  .post('/users', createUser)
+  .put('/users/:id', updateUser)
   .delete('/users/:id', deleteUserAndRelatedTweetsById);
 
 //Tweets Endpoints
