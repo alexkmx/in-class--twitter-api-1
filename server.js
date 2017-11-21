@@ -4,6 +4,7 @@ const ejs = require('ejs');
 const connectToDb = require('./src/database/dbConnect.js');
 const dbConfigObj = require('./knexfile.js');
 const {Model} = require ('objection');
+const bodyParser = require('body-parser');
 
 const pageRouter = require('./src/routes/pageRouter.js');
 const apiRouter = require('./src/routes/apiRouter.js');
@@ -19,6 +20,9 @@ app.locals.db = appDb;
 app.engine('ejs', ejs.renderFile);
 app.set('view engine','ejs');
 app.set('views', `${__dirname}/src/views`);
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.use(express.static(`${__dirname}/public`))
 

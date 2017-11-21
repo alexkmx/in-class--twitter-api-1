@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.2",
     "npm-run-all": "4.1.2",
     "objection": "^0.9.1"
   },
@@ -19,7 +20,7 @@
     "ejs": "^2.5.7",
     "express": "^4.16.2",
     "fs-extra": "^4.0.2",
-    "knex": "^0.14.1",
+    "knex": "^0.13.0",
     "mysql": "^2.15.0",
     "nodemon": "1.12.1"
   }
