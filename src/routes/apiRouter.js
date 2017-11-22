@@ -1,86 +1,86 @@
 const Router = require('express').Router;
-const Tweets = require('../models/Tweet.js')
-const Users = require('../models/User.js')
+const Tweet = require('../models/Tweet.js')
+const Profile = require('../models/Profile.js')
 
 const apiRouter = Router();
 
 //USER FUNCTIONS
 
-function getAllUsers(req, res) {
-  Users
+function getAllProfiles(req, res) {
+  Profile
 
     .query()
-    .eager('tweets')
+    .eager('tweet')
     .then(data => res.json(data));
 }
 
-function getUserById(req, res) {
-  Users
+function getProfileById(req, res) {
+  Profile
   .query()
   .findById(req.params.id)
-  .then(Users => {
-    res.json(Users).status(200);
+  .then(Profile => {
+    res.json(Profile).status(200);
   })
   .catch(error => {
     res.send(error).status(500);
   });
 }
 
-function createUser (req, res) {
-  Users
+function createProfile(req, res) {
+  Profile
   .query()
   .insert(req.body)
-  .then(newUser => {
-    return json (newUser).status(200);
+  .then(newProfile => {
+    return json (newProfile).status(200);
   })
   .catch(error => {
     return res.send(error).status(500);
   });
 }
 
-function updateUser(req, res) {
-  Users
+function updateProfile(req, res) {
+  Profile
   .query()
   .updateAndFetchById(req.params.id, req.body)
-  .then(userUpdated => {
-    return res.json(userUpdated).status(200);
+  .then(profileUpdated => {
+    return res.json(profileUpdated).status(200);
   })
   .catch(error => {
     return res.send(error).status(500);
   })
 }
 
-function deleteUserAndRelatedTweetsById (req, res) {
-  // Get User to delete from DB.
-  Users
+function deleteProfileAndRelatedTweetsById (req, res) {
+  // Get Profile to delete from DB.
+  Profile
     .query()
     .where('id', req.params.id)
     .first()
     .returning('*')
-    .then(userToDelete => {
+    .then(profileToDelete => {
       // Delete all tweets from this User.
-      return userToDelete
-        .$relatedQuery('tweets') // eager name declared in the relation
+      return profileToDelete
+        .$relatedQuery('tweet') // eager name declared in the relation
         .delete()
-        .where('userId', userToDelete.id)
+        .where('profileId', profileToDelete.id)
         .returning('*')
         .then(tweetsDeleted => {
-          return userToDelete
+          return profileToDelete
         })
         .catch(error => {
           return res.send(error).status(500);
         });
     })
-    .then(user => {
-      return Users
+    .then(profile => {
+      return Profile
         .query()
-        .deleteById(user.id)
+        .deleteById(profile.id)
         .then(() => {
-          return user;
+          return profile;
         })
     })
-    .then(userDeleted => {
-      res.json(userDeleted).status(200);
+    .then(profileDeleted => {
+      res.json(profileDeleted).status(200);
     })
     .catch(error => {
       return res.send(error).status(500);
@@ -90,14 +90,14 @@ function deleteUserAndRelatedTweetsById (req, res) {
 //TWEET FUNCTIONS
 
 function getAllTweets (req, res) {
-  Tweets
+  Tweet
 
     .query()
     .then(data => res.json(data));
 }
 
 function getTweetById(req, res) {
-  Tweets
+  Tweet
   .query()
   .findById(req.params.id)
   .then(Tweet => {
@@ -109,7 +109,7 @@ function getTweetById(req, res) {
 }
 
 function createTweet (req, res) {
-  Tweets
+  Tweet
   .query()
   .insert(req.body)
   .then(newTweet => {
@@ -121,7 +121,7 @@ function createTweet (req, res) {
 }
 
 function updateTweet(req, res) {
-  Tweets
+  Tweet
   .query()
   .updateAndFetchById(req.params.id, req.body)
   .then(tweetUpdated => {
@@ -133,12 +133,12 @@ function updateTweet(req, res) {
 }
 
 function deleteTweetById(req, res) {
-  Tweets
+  Tweet
   .query()
   .deleteById(req.params.id)
-  .then(tweetsDeleted => {
+  .then(tweetDeleted => {
     return res.json({
-  rowsDeleted: tweetsDeleted
+  rowsDeleted: tweetDeleted
   });
 })
   .catch(error => {
@@ -146,20 +146,20 @@ function deleteTweetById(req, res) {
   })
 }
 
-//User Endpoints
+//Profile Endpoints
 apiRouter
-  .get('/users', getAllUsers)
-  .get('/users/:id', getUserById)
-  .post('/users', createUser)
-  .put('/users/:id', updateUser)
-  .delete('/users/:id', deleteUserAndRelatedTweetsById);
+  .get('/profile', getAllProfiles)
+  .get('/profile/:id', getProfileById)
+  .post('/profile', createProfile)
+  .put('/profile/:id', updateProfile)
+  .delete('/profile/:id', deleteProfileAndRelatedTweetsById);
 
 //Tweets Endpoints
 apiRouter
-  .get('/tweets', getAllTweets)
-  .get('/tweets/:id', getTweetById)
-  .post('/tweets', createTweet)
-  .put('/tweets/:id', updateTweet)
-  .delete('/tweets/:id', deleteTweetById);
+  .get('/tweet', getAllTweets)
+  .get('/tweet/:id', getTweetById)
+  .post('/tweet', createTweet)
+  .put('/tweet/:id', updateTweet)
+  .delete('/tweet/:id', deleteTweetById);
 
 module.exports = apiRouter;

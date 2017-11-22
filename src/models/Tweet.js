@@ -1,9 +1,9 @@
 const {Model} = require('objection');
 
-class Tweets extends Model {
+class Tweet extends Model {
  static get tableName(){
-  return 'tweets';
+  return 'tweet';
   }
  }
 
-module.exports = Tweets;
+module.exports = Tweet;

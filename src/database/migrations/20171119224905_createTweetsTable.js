@@ -2,7 +2,7 @@
 exports.up = function(knex, Promise) {
   return knex
     .schema
-    .createTable('tweets', table => {
+    .createTable('tweet', table => {
       table.increments();
 
       table.string('description');
@@ -15,5 +15,5 @@ exports.up = function(knex, Promise) {
 exports.down = function(knex, Promise) {
   return knex
     .schema
-    .dropTableIfExists('tweets');
+    .dropTableIfExists('tweet');
 };
