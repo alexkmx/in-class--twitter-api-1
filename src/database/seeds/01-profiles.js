@@ -17,10 +17,10 @@ const dataRows = [
 ];
 
 exports.seed = function(knex, Promise) {
-  return knex('users')
+  return knex('profile')
     .del()
     .then(() => {
-      return knex('users')
+      return knex('profile')
         .insert(dataRows);
     });
 }

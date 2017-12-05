@@ -2,7 +2,7 @@
 exports.up = function(knex, Promise) {
   return knex
   .schema
-  .createTable('users', table => {
+  .createTable('profile', table => {
     table.increments();
 
     table.string('username');
@@ -15,5 +15,5 @@ exports.up = function(knex, Promise) {
 exports.down = function(knex, Promise) {
   return knex
     .schema
-    .dropTableIfExists('users');
+    .dropTableIfExists('profile');
 };
