@@ -6,6 +6,16 @@ const apiRouter = Router();
 
 //USER FUNCTIONS
 
+function requireAuthentication(req, res, next) {
+   if(req.user) { //Si esta logeado lo dejo consultar con next
+    next();
+    }else {        //SIno responmdemos no hay usuario logeado
+      res.json({
+      status: 'No User Authenticated.'
+    });
+  }
+}
+
 function getAllProfiles(req, res) {
   Profile
 
@@ -148,7 +158,7 @@ function deleteTweetById(req, res) {
 
 //Profile Endpoints
 apiRouter
-  .get('/profile', getAllProfiles)
+  .get('/profile', requireAuthentication, getAllProfiles)
   .get('/profile/:id', getProfileById)
   .post('/profile', createProfile)
   .put('/profile/:id', updateProfile)
@@ -156,7 +166,7 @@ apiRouter
 
 //Tweets Endpoints
 apiRouter
-  .get('/tweet', getAllTweets)
+  .get('/tweet', requireAuthentication, getAllTweets)
   .get('/tweet/:id', getTweetById)
   .post('/tweet', createTweet)
   .put('/tweet/:id', updateTweet)
